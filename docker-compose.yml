@@ -1,0 +1,42 @@
+# FILEPATH: /Users/idabjorn/Documents/repositories/docker-compose.yml
+name: myrabbitmqapp
+version: '3.8'
+services:
+  consumer:
+    image: beatebjoern/rmq-consumer-image:4.0
+    networks:
+      - default
+    volumes:
+      - shared_data:/app/Shared
+    env_file:
+      - .env
+
+
+  producer:
+    image: beatebjoern/rmq-producer-image:4.0
+    ports:
+       - "5002:80"
+    networks:
+      - default
+    volumes:
+      - shared_data:/app/Shared
+    env_file:
+      - .env
+
+  rabbitmq:
+      image: rabbitmq:3-management
+      container_name: rabbitmq-container
+      ports:
+          - 5672:5672
+          - 15672:15672
+
+networks:
+  default:
+    driver: bridge
+    name: mitnet
+
+volumes:
+  shared_data:
+    name: shared_data
+
+
