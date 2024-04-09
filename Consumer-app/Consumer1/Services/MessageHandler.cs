@@ -46,8 +46,6 @@ namespace Services
                         Console.WriteLine("Saved message to database \n -----------------------------------------------------------");
                         channel.BasicAck(deliveryTag, false);
                         _csvWriterService.WriteToCsv(new List<Message> { messageObj });
-                        Console.WriteLine("Saved message to database \n -----------------------------------------------------------");
-
                         break;
                     case 2:
                         // Message needs to be requeued
