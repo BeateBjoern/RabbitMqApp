@@ -30,6 +30,18 @@ public class Worker : BackgroundService
         _factory = factory; 
         _messageHandler = messageHandler;
 
+            // Get the host name of the current machine
+            var hostName = System.Net.Dns.GetHostName();
+
+            // Get the IP addresses associated with the host name
+            var ips = System.Net.Dns.GetHostAddresses(hostName);
+
+            // Get the first IPv4 address from the list of IP addresses
+            var _ipaddr = ips.First().MapToIPv4().ToString();
+
+            // Log the information about the service's IP address
+            _logger.LogInformation(1, $"Producer Service responding from {_ipaddr}");
+
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

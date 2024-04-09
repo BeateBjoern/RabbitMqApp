@@ -2,3 +2,7 @@ Value,Counter,Timestamp
 test til container 5,4,03/30/2024 12:14:28
 test til container 5,4,03/30/2024 12:14:42
 test til container 5,1,03/30/2024 12:14:54
+"[Test message for Logging] ",1,04/09/2024 13:06:42
+"[Test message for Logging] ",4,04/09/2024 13:08:42
+"[Hej] ",1,04/09/2024 13:18:36
+"[This is a test!!!!] ",4,04/09/2024 13:21:48

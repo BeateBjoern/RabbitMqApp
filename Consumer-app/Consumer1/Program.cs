@@ -9,19 +9,18 @@ using RabbitMQ.Client;
 using Interfaces;
 using System.IO;
 using System;
+using NLog;
+using NLog.Web; 
 
 public class Program
 {
     public static void Main(string[] args)
     {
         LoadEnvironmentVariables();
-
         // Get the environment variable to determine the environment from the command line
         var environment = args[0];
 
-
-
-        // Feed the environment variable to the CreateHostBuilder method
+        // Create the host builder and build the host
         CreateHostBuilder(args, environment).Build().Run();
 
 
@@ -35,27 +34,32 @@ public class Program
                 // Hosted services are automatically created and started by the host
                 services.AddHostedService<Worker>();
 
+
                 // Register the ConnectionFactory as the implementation of IConnectionFactory 
-                // Worker class depends on this instance and uses the RabbitMQConnectionFactory class to create a connection to RabbitMQ
+                // Worker class injected with IRabbitMQConnectionFactory instance for connection 
                 services.AddSingleton<IRabbitMQConnectionFactory>(provider =>
                 {
-                    // Create a new instance of the RabbitMQConnectionFactory class with the host name
+                    // Setting hostname for RabbitMQ server
                     string hostName;
                     if (environment == "dev")
                     {
-                        // Use localhost as the default in dev mode
+                        // Use localhost as the default in development mode
                         hostName = "localhost";
                     }
                     else
                     {
-                      
-                        hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST"); 
+                        // Use the environment variable in production mode
+                        hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
                     }
 
+                    // Return a new RabbitMQConnectionFactory instance
                     return new RabbitMQConnectionFactory(hostName);
+
                 });
 
-                // Client connection to MongoDB server - reusing the same client connection. Uses IDisposable, but the DI container manages the lifetime
+
+
+                // Inject the IMongoClient service into the MongoDBContext service
                 services.AddSingleton<IMongoClient>(provider =>
                 {
                     var connectionString = Environment.GetEnvironmentVariable("MONGODB_STRING");
@@ -63,21 +67,35 @@ public class Program
                 });
 
 
-                // This service always takes the same instance of the IMongoClient service on construction
+
+                // Injecting MongoDBContext (uses IMongoClient)
                 services.AddSingleton<MongoDBContext>();
+
+                //Injecting MessageHandler
                 services.AddSingleton<MessageHandler>();
 
-                // Create a StreamWriter instance for writing to a CSV file
+                // Adding a singleton service for the StreamWriter
                 services.AddSingleton(provider =>
                 {
                     var filePath = "./Shared/Messages.csv";
                     return new StreamWriter(filePath, append: true);
                 });
 
+                // Injecting the CsvWriterService (uses StreamWriter instance)
                 services.AddSingleton<CsvWriterService>();
-                services.AddSingleton<MessageProcessor>();
-            });
 
+                //Injecting MessageProcessor
+                services.AddSingleton<MessageProcessor>();
+
+
+            }).UseNLog(); //Adding logging to the hostbuilder 
+
+
+
+
+
+
+    // Load environment variables from the .env file
     private static void LoadEnvironmentVariables()
     {
         var root = Directory.GetCurrentDirectory();
