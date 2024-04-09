@@ -610,3 +610,6 @@ Desktop.ini
 
 ## Docker 
 docker-compose.yml
+
+##Email service
+EmailService.cs 

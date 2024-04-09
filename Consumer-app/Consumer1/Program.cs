@@ -20,14 +20,6 @@ public class Program
         var environment = args[0];
 
 
-        Console.WriteLine("Enter recipient email address:");
-            string recipientEmail = Console.ReadLine();
-
-            // Create an instance of EmailSender and send the email
-            EmailService emailSender = new EmailService();
-            emailSender.SendEmail(recipientEmail);
-
-
 
         // Feed the environment variable to the CreateHostBuilder method
         CreateHostBuilder(args, environment).Build().Run();
