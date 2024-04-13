@@ -61,6 +61,8 @@ namespace Controllers;
                 return BadRequest("Invalid request body");
             }
           
+            _logger.LogInformation("Test log message with labels: App={app}, Server={server}");
+
 
             // Call the service method with the extracted values
             await _producerService.CreateMessageAsync(message);

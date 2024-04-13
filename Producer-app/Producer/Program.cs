@@ -4,38 +4,27 @@ using Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Web;
-using Microsoft.AspNetCore.Builder;
 
 
+var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
+logger.Info("init main");
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings() //Load config settings from AppSettings.json 
-        .GetCurrentClassLogger(); // Create and return a logger object
-try
-{   
-    //Configure NLog framework 
-
-
-    logger.Debug("Init started main");
-
-    
-}
-catch (Exception ex)
-{
-    Console.WriteLine(ex.Message);
-    logger.Error(ex, "Stopped program because of exception");
-    throw;
-}
-finally
-{
-    // Shutdown to release sources 
-    NLog.LogManager.Shutdown();
-}
-
+ try
+    {
+        logger.Info("init main");
+        Console.WriteLine("Hello World!");
+    }
+    catch (Exception ex)
+    {
+        logger.Error(ex, "Stopped program because of exception");
+        throw;
+    }
+    finally {
+        LogManager.Shutdown();
+    }
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Host.UseNLog();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -56,8 +45,18 @@ builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(provider =>
 });
 
 
+builder.Logging.ClearProviders();
+builder.Host.UseNLog(); 
+
+
+
+
 
 var app = builder.Build();
+
+
+
+   
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

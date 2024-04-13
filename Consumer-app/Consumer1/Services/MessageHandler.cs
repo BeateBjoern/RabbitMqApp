@@ -12,11 +12,14 @@ namespace Services
 { 
     public class MessageHandler : IMessageHandler
     {
+
+        // List of dependencies
         private readonly ILogger<MessageHandler> _logger;
         private readonly MongoDBContext _mongoDbContext;
         private readonly CsvWriterService _csvWriterService;
         private readonly MessageProcessor _messageProcessor;
 
+        // Initializes a new instance of the MessageHandler class w/ dependencies
         public MessageHandler(ILogger<MessageHandler> logger, MongoDBContext mongoDbContext, CsvWriterService csvWriterService, MessageProcessor messageProcessor)
         {
             _logger = logger;
@@ -36,9 +39,9 @@ namespace Services
                 {
                     case 0:
                         // Message is too old and deleted from queue
-                        Console.WriteLine("Message is too old and deleted from queue");
+                        Console.WriteLine("Message is too old and deleted from queue \n -----------------------------------------------------------");
                         channel.BasicAck(deliveryTag, false);
-                        Console.WriteLine("-----------------------------------------------------------");
+                        
                         break;
                     case 1:
                         // Save message to database
@@ -46,12 +49,13 @@ namespace Services
                         Console.WriteLine("Saved message to database \n -----------------------------------------------------------");
                         channel.BasicAck(deliveryTag, false);
                         _csvWriterService.WriteToCsv(new List<Message> { messageObj });
-                        Console.WriteLine("Saved message to database \n -----------------------------------------------------------");
+                        Console.WriteLine("Message written to CSV \n -----------------------------------------------------------");
 
                         break;
                     case 2:
-                        // Message needs to be requeued
-                        Console.WriteLine(" Message requeued: " + messageObj.Value);
+                        // If second of timestamp is odd, requeue 
+                        
+                        Console.WriteLine(" Message requeued: " + messageObj.Counter + " time(s)");
                         messageObj.Counter += 1;
                         messageObj.Timestamp = DateTime.UtcNow;
 
@@ -64,7 +68,7 @@ namespace Services
                                             basicProperties: null,
                                             body: Encoding.UTF8.GetBytes(modifiedMessage));
 
-                        Thread.Sleep(1500);
+                        Thread.Sleep(2000);
 
                         Console.WriteLine("-----------------------------------------------------------");
                         break;

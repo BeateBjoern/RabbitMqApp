@@ -88,7 +88,7 @@ public class Program
                 services.AddSingleton<MessageProcessor>();
 
 
-            }).UseNLog(); //Adding logging to the hostbuilder 
+            }).UseNLog(); //Adding logging to the hostbuilder using NLog
 
 
 

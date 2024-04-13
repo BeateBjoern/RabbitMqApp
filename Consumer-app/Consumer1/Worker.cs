@@ -45,12 +45,16 @@ public class Worker : BackgroundService
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
+    {   
+        //Creating a connection to RabbitMQ
         using var connection = _factory.CreateConnection();
         using var channel = connection.CreateModel();
 
-        await DeclareQueue(channel); // Declaring the queue
-        await ConsumeMessage(channel, stoppingToken); // Consuming the message
+        //Declaring the queue
+        await DeclareQueue(channel); 
+
+        //Consuming the message
+        await ConsumeMessage(channel, stoppingToken);
 
     }
 
@@ -65,8 +69,10 @@ public class Worker : BackgroundService
 
     public async Task ConsumeMessage(IModel channel, CancellationToken stoppingToken)
     {
+        //Creating a consumer
         var consumer = new EventingBasicConsumer(channel);
 
+        //Receiving the message from the queue
         consumer.Received += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
@@ -75,6 +81,7 @@ public class Worker : BackgroundService
 
             Console.WriteLine($"Received {message}");
 
+            //After consuming, calling the MessageHandler class to handle the message
             await _messageHandler.HandleMessages(messageObj, ea.DeliveryTag, channel);
         };
 

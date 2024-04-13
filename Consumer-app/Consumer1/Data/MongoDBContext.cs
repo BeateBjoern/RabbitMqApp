@@ -13,8 +13,9 @@ namespace Data
         // Initializes a new instance of the MongoDBContext class
         public MongoDBContext(IMongoClient mongoClient)
         {
-            string databaseName = "rabbitmq";
-            string collectionName = "messages";
+            string databaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME");
+            string collectionName = Environment.GetEnvironmentVariable("MONGODB_COLLECTION_NAME");
+
 
             // Get the database and collection from the MongoDB client
             var database = mongoClient.GetDatabase(databaseName);

@@ -21,6 +21,7 @@
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
     <None Include="NLog.config">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-  </None>
+    </None>
+    <PackageReference Include="sharedlib_eaa_idbj" Version="1.0.0" />
   </ItemGroup>
 </Project>
