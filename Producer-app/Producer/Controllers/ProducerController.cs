@@ -70,7 +70,7 @@ namespace Controllers;
 
 
         [HttpPost("{number}")]
-        public async Task<IActionResult> TriggerProducer(int number)
+        public async Task<IActionResult> PostMultipleMessages(int number)
         {
             // Triggering the producer logic to send a message with post request 
             try{

@@ -8,13 +8,12 @@ using NLog.Web;
 
 var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 string csvFilePath = builder.Configuration.GetValue<string>("CsvFilePath");
 builder.Services.AddSingleton<IProducerService>(provider =>
     new ProducerService(
@@ -24,7 +23,6 @@ builder.Services.AddSingleton<IProducerService>(provider =>
 );
 builder.Services.AddSingleton<IConnectionFactory, ConnectionFactory>(provider => // Registering ConnectionFactory as the implementation of IConnectionFactory
 {
-    // Configure RabbitMQ connection settings from appsettings.json
     // If the RABBITMQ_HOST environment variable is not set, use localhost as the default value
     var hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
     return new ConnectionFactory { HostName = hostName };
