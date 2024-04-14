@@ -18,7 +18,14 @@ public class Program
     {
         LoadEnvironmentVariables();
         // Get the environment variable to determine the environment from the command line
-        var environment = args[0];
+
+        string environment = "prod";
+
+        // Check if there are command-line arguments and set environment accordingly
+        if (args.Length > 0)
+        {
+            environment = args[0];
+        }
 
         // Create the host builder and build the host
         CreateHostBuilder(args, environment).Build().Run();
@@ -40,13 +47,13 @@ public class Program
                 services.AddSingleton<IRabbitMQConnectionFactory>(provider =>
                 {
                     // Setting hostname for RabbitMQ server
-                    string hostName;
+                    string hostName = null;
                     if (environment == "dev")
                     {
                         // Use localhost as the default in development mode
                         hostName = "localhost";
                     }
-                    else
+                    else if(environment == "prod")
                     {
                         // Use the environment variable in production mode
                         hostName = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
@@ -98,8 +105,8 @@ public class Program
     // Load environment variables from the .env file
     private static void LoadEnvironmentVariables()
     {
-        var root = Directory.GetCurrentDirectory();
-        var dotenv = Path.Combine(root, ".env");
+        //File path to the .env file (parent folder)
+        var dotenv = "../.env";
         if (File.Exists(dotenv))
         {
             DotEnv.Load(dotenv);

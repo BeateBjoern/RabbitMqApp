@@ -7,21 +7,7 @@ using NLog.Web;
 
 
 var logger = NLog.LogManager.Setup().GetCurrentClassLogger();
-logger.Info("init main");
 
- try
-    {
-        logger.Info("init main");
-        Console.WriteLine("Hello World!");
-    }
-    catch (Exception ex)
-    {
-        logger.Error(ex, "Stopped program because of exception");
-        throw;
-    }
-    finally {
-        LogManager.Shutdown();
-    }
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +15,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-string csvFilePath = builder.Configuration.GetValue<string>("CsvFilePathLocal");
+string csvFilePath = builder.Configuration.GetValue<string>("CsvFilePath");
 builder.Services.AddSingleton<IProducerService>(provider =>
     new ProducerService(
         provider.GetRequiredService<IConnectionFactory>(),

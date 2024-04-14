@@ -68,7 +68,7 @@ namespace Services
                                             basicProperties: null,
                                             body: Encoding.UTF8.GetBytes(modifiedMessage));
 
-                        Thread.Sleep(2000);
+                        Thread.Sleep(1500);
 
                         Console.WriteLine("-----------------------------------------------------------");
                         break;

@@ -30,7 +30,7 @@ namespace Controllers;
             var _ipaddr = ips.First().MapToIPv4().ToString();
 
             // Log the information about the service's IP address
-            _logger.LogInformation(1, $"Producer Service responding from {_ipaddr}");
+            // _logger.LogInformation(1, $"Producer Service responding from {_ipaddr}");
         }
 
 
@@ -60,9 +60,6 @@ namespace Controllers;
                 _logger.LogError("  Invalid request body\n\n");
                 return BadRequest("Invalid request body");
             }
-          
-            _logger.LogInformation("Test log message with labels: App={app}, Server={server}");
-
 
             // Call the service method with the extracted values
             await _producerService.CreateMessageAsync(message);
@@ -78,7 +75,7 @@ namespace Controllers;
             // Triggering the producer logic to send a message with post request 
             try{
                 await _producerService.CreateMessagesAsync(number);
-                _logger.LogInformation("  Messages sent successfully\n\n");
+                // _logger.LogInformation("  Messages sent successfully\n\n");
                 return Ok("Message sent successfully");
                 
             }

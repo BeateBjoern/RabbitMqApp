@@ -40,7 +40,7 @@ public class Worker : BackgroundService
             var _ipaddr = ips.First().MapToIPv4().ToString();
 
             // Log the information about the service's IP address
-            _logger.LogInformation(1, $"Producer Service responding from {_ipaddr}");
+            _logger.LogInformation(1, $"Consumer Service responding from {_ipaddr}");
 
     }
 
