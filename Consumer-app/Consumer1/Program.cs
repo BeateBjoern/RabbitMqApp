@@ -21,7 +21,7 @@ public class Program
 
         string environment = "prod";
 
-        // Check if there are command-line arguments and set environment accordingly
+        // Check if there are command-line arguments, if not, use the default environment
         if (args.Length > 0)
         {
             environment = args[0];
@@ -63,7 +63,6 @@ public class Program
                     return new RabbitMQConnectionFactory(hostName);
 
                 });
-
 
 
                 // Inject the IMongoClient service into the MongoDBContext service
